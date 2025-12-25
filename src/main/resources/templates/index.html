@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Client Panel</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        .hero {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .hero p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        .btn-login {
+            background-color: #667eea;
+            border: none;
+            padding: 12px 40px;
+            font-size: 1.1em;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .btn-login:hover {
+            background-color: #764ba2;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-users"></i> Client Panel
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero" style="margin-top: 60px;">
+        <h1>Welcome to Client Panel</h1>
+        <p>Manage your clients efficiently with our modern management system</p>
+        <a href="/login" class="btn btn-login btn-primary">Get Started</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
