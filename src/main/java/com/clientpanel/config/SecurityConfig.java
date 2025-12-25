@@ -14,7 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -27,10 +27,10 @@ public class SecurityConfig {
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
+    public DaoAuthenticationProvider authenticationProvider(PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setPasswordEncoder(passwordEncoder);
         return authProvider;
     }
 
@@ -40,14 +40,17 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, PasswordEncoder passwordEncoder) throws Exception {
         http
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/login")
+                )
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/", "/login", "/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/dashboard", "/clients/**").authenticated()
                         .anyRequest().authenticated()
                 )
-                .authenticationProvider(authenticationProvider())
+                .authenticationProvider(authenticationProvider(passwordEncoder))
                 .formLogin(form -> form
                         .loginPage("/login")
                         .usernameParameter("email")
