@@ -94,33 +94,64 @@ public class ClientController {
     @PostMapping("/edit/{clientId}")
     public String updateClient(
             @PathVariable String clientId,
-            @Valid @ModelAttribute("user") User user,
+            @ModelAttribute("user") User user,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes,
             Model model) {
 
+        System.out.println("📝 Update request for client: " + clientId);
+        
+        // Validate individual fields manually (skip password validation for edit)
+        if (user.getEmail() == null || user.getEmail().isEmpty()) {
+            bindingResult.rejectValue("email", "error.email", "Email is required");
+        } else if (!user.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            bindingResult.rejectValue("email", "error.email", "Email should be valid");
+        }
+        
+        if (user.getName() == null || user.getName().isEmpty()) {
+            bindingResult.rejectValue("name", "error.name", "Name is required");
+        }
+        
+        if (user.getMobile() == null || user.getMobile().isEmpty()) {
+            bindingResult.rejectValue("mobile", "error.mobile", "Mobile number is required");
+        } else if (!user.getMobile().matches("^[0-9]{10,15}$")) {
+            bindingResult.rejectValue("mobile", "error.mobile", "Mobile number must be numeric between 10 and 15 digits");
+        }
+        
+        if (user.getPhoneNumberId() == null || user.getPhoneNumberId().isEmpty()) {
+            bindingResult.rejectValue("phoneNumberId", "error.phoneNumberId", "Phone number ID is required");
+        } else if (!user.getPhoneNumberId().matches("^[0-9]{15}$")) {
+            bindingResult.rejectValue("phoneNumberId", "error.phoneNumberId", "Phone number ID must be exactly 15 numeric digits");
+        }
+        
         if (bindingResult.hasErrors()) {
+            System.out.println("❌ Validation errors found: " + bindingResult.getErrorCount());
+            bindingResult.getAllErrors().forEach(error -> System.out.println("  - " + error.getDefaultMessage()));
             return "client/edit";
         }
 
         // Check for duplicate email (excluding current user)
         userService.getUserByEmail(user.getEmail()).ifPresent(existingUser -> {
             if (!existingUser.getClientId().equals(clientId)) {
+                System.out.println("❌ Email already in use: " + user.getEmail());
                 bindingResult.rejectValue("email", "error.email", "Email is already in use");
             }
         });
 
         // Check for duplicate mobile (excluding current user)
         if (!userService.isMobileUniqueExcluding(user.getMobile(), clientId)) {
+            System.out.println("❌ Mobile already in use: " + user.getMobile());
             bindingResult.rejectValue("mobile", "error.mobile", "Mobile number is already in use");
         }
 
         // Check for duplicate phone number ID (excluding current user)
         if (!userService.isPhoneNumberIdUniqueExcluding(user.getPhoneNumberId(), clientId)) {
+            System.out.println("❌ Phone number ID already in use: " + user.getPhoneNumberId());
             bindingResult.rejectValue("phoneNumberId", "error.phoneNumberId", "Phone number ID is already in use");
         }
 
         if (bindingResult.hasErrors()) {
+            System.out.println("❌ Duplicate field errors found");
             return "client/edit";
         }
 
@@ -129,6 +160,7 @@ public class ClientController {
             redirectAttributes.addFlashAttribute("successMessage", "Client updated successfully!");
             return "redirect:/clients";
         } catch (Exception e) {
+            System.err.println("❌ Error updating client: " + e.getMessage());
             model.addAttribute("errorMessage", "Error updating client: " + e.getMessage());
             return "client/edit";
         }

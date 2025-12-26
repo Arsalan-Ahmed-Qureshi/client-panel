@@ -40,7 +40,6 @@ public class User {
     private String phoneNumberId;
 
     @Column(name = "pass", length = 255, nullable = false)
-    @NotBlank(message = "Password is required")
     private String pass;
 
     @Column(name = "chat_prefix", columnDefinition = "TEXT")

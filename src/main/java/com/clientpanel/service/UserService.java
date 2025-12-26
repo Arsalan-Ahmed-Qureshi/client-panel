@@ -48,27 +48,29 @@ public class UserService {
         User user = userRepository.findById(clientId)
                 .orElseThrow(() -> new RuntimeException("User not found with client_id: " + clientId));
 
-        if (userDetails.getEmail() != null) {
+        if (userDetails.getEmail() != null && !userDetails.getEmail().isEmpty()) {
             user.setEmail(userDetails.getEmail());
         }
-        if (userDetails.getName() != null) {
+        if (userDetails.getName() != null && !userDetails.getName().isEmpty()) {
             user.setName(userDetails.getName());
         }
-        if (userDetails.getMobile() != null) {
+        if (userDetails.getMobile() != null && !userDetails.getMobile().isEmpty()) {
             user.setMobile(userDetails.getMobile());
         }
-        if (userDetails.getPhoneNumberId() != null) {
+        if (userDetails.getPhoneNumberId() != null && !userDetails.getPhoneNumberId().isEmpty()) {
             user.setPhoneNumberId(userDetails.getPhoneNumberId());
         }
-        if (userDetails.getChatPrefix() != null) {
+        if (userDetails.getChatPrefix() != null && !userDetails.getChatPrefix().isEmpty()) {
             user.setChatPrefix(userDetails.getChatPrefix());
         }
-        if (userDetails.getStatus() != null) {
+        if (userDetails.getStatus() != null && !userDetails.getStatus().isEmpty()) {
             user.setStatus(userDetails.getStatus());
         }
         // Password is updated separately through changePassword method
 
-        return userRepository.save(user);
+        User updatedUser = userRepository.save(user);
+        System.out.println("✓ Client updated successfully: " + updatedUser.getClientId());
+        return updatedUser;
     }
 
     public void deleteUser(String clientId) {
