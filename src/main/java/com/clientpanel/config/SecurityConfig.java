@@ -43,10 +43,10 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http, PasswordEncoder passwordEncoder) throws Exception {
         http
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/login")
+                        .ignoringRequestMatchers("/login", "/logout")
                 )
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/", "/login", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/", "/login", "/logout", "/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/dashboard", "/clients/**").authenticated()
                         .anyRequest().authenticated()
                 )
@@ -62,9 +62,11 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/")
+                        .logoutSuccessUrl("/login")
                         .invalidateHttpSession(true)
+                        .clearAuthentication(true)
                         .deleteCookies("JSESSIONID")
+                        .permitAll()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
