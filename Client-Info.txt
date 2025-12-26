@@ -1,0 +1,12 @@
+*Client Info*
+
+Al-khidmat OFSP
+Client ID = 100
+Mobile Number = 923402558930
+Phone Number ID= 763421936848515
+
+Chandka Institute of Nursing
+Client ID = 101
+Mobile Number = 923711571569
+Phone Number ID = 890968410769263
+

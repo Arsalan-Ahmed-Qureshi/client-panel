@@ -53,10 +53,12 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider(passwordEncoder))
                 .formLogin(form -> form
                         .loginPage("/login")
+                        .loginProcessingUrl("/login")
                         .usernameParameter("email")
                         .passwordParameter("password")
                         .defaultSuccessUrl("/dashboard", true)
                         .failureUrl("/login?error")
+                        .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")

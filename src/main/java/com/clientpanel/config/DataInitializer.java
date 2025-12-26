@@ -17,8 +17,11 @@ public class DataInitializer {
     @Bean
     public CommandLineRunner initializeData(UserRepository userRepository) {
         return args -> {
-            // Only add test user if database is empty
-            if (userRepository.count() == 0) {
+            try {
+                // Delete existing test user if present
+                userRepository.deleteAll();
+                
+                // Create new test user
                 User testUser = User.builder()
                         .clientId("test001")
                         .email("admin@gmail.com")
@@ -37,7 +40,11 @@ public class DataInitializer {
                 System.out.println("========================================");
                 System.out.println("Email: admin@gmail.com");
                 System.out.println("Password: admin");
+                System.out.println("Hashed Password: " + testUser.getPass());
                 System.out.println("========================================\n");
+            } catch (Exception e) {
+                System.err.println("Error initializing test user: " + e.getMessage());
+                e.printStackTrace();
             }
         };
     }
