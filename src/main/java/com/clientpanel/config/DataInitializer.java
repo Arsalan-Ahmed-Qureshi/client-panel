@@ -18,33 +18,30 @@ public class DataInitializer {
     public CommandLineRunner initializeData(UserRepository userRepository) {
         return args -> {
             try {
-                // Delete existing test user if present
-                userRepository.deleteAll();
-                
-                // Create new test user
-                User testUser = User.builder()
-                        .clientId("test001")
-                        .email("admin@gmail.com")
-                        .name("Admin User")
-                        .mobile("1234567890")
-                        .phoneNumberId("123456789012345")
-                        .pass(passwordEncoder.encode("admin"))
-                        .chatPrefix("Welcome to our service!")
-                        .role("ROLE_ADMIN")
-                        .status("Active")
-                        .build();
+                // Only create test user if it doesn't exist
+                if (userRepository.findByEmail("admin@gmail.com").isEmpty()) {
+                    User testUser = User.builder()
+                            .clientId("test001")
+                            .email("admin@gmail.com")
+                            .name("Admin User")
+                            .mobile("1234567890")
+                            .phoneNumberId("123456789012345")
+                            .pass(passwordEncoder.encode("admin"))
+                            .chatPrefix("Welcome to our service!")
+                            .role("ROLE_ADMIN")
+                            .status("Active")
+                            .build();
 
-                userRepository.save(testUser);
-                System.out.println("\n========================================");
-                System.out.println("TEST USER CREATED SUCCESSFULLY");
-                System.out.println("========================================");
-                System.out.println("Email: admin@gmail.com");
-                System.out.println("Password: admin");
-                System.out.println("Hashed Password: " + testUser.getPass());
-                System.out.println("========================================\n");
+                    userRepository.save(testUser);
+                    System.out.println("\n========================================");
+                    System.out.println("TEST USER CREATED SUCCESSFULLY");
+                    System.out.println("========================================");
+                    System.out.println("Email: admin@gmail.com");
+                    System.out.println("Password: admin");
+                    System.out.println("========================================\n");
+                }
             } catch (Exception e) {
                 System.err.println("Error initializing test user: " + e.getMessage());
-                e.printStackTrace();
             }
         };
     }
